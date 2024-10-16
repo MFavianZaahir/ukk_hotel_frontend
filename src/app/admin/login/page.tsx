@@ -1,53 +1,66 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import axios from 'axios'
-import { useRouter } from 'next/navigation'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { AlertCircle } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import Cookies from 'js-cookie'
-
+import { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError("");
 
     try {
-      const res = await axios.post('http://localhost:8000/user/login', { email, password })
-      
+      const res = await axios.post("http://localhost:8000/user/login", {
+        email,
+        password,
+      });
+
       if (res.data.success) {
         const { token } = res.data; // Assuming the token is returned from the backend
-        
+
         // Store JWT in cookies
-        Cookies.set('token', token, { expires: 7 }); // Expires in 7 days
-        
+        Cookies.set("token", token, {
+          expires: 7,
+          secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+        }); // Expires in 7 days
         // Redirect after login
-        router.push('/')
+        router.push("/");
       } else {
-        setError(res.data.message)
+        setError(res.data.message);
       }
     } catch (err) {
-      console.error(err)
-      setError('Login failed. Please try again.')
+      console.error(err);
+      setError("Login failed. Please try again.");
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Login</CardTitle>
-          <CardDescription>Enter your email and password to login.</CardDescription>
+          <CardDescription>
+            Enter your email and password to login.
+          </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
@@ -75,7 +88,9 @@ export default function LoginPage() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full">Login</Button>
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
           </CardFooter>
         </form>
         {error && (
@@ -87,5 +102,5 @@ export default function LoginPage() {
         )}
       </Card>
     </div>
-  )
+  );
 }
