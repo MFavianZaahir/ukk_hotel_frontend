@@ -14,7 +14,7 @@ type FilterComponentProps = {
   onFilterApplied: (filteredData: any) => void;
 };
 
-export default function FilterComponent({ roomTypes, onFilterApplied }: FilterComponentProps) {
+export default function FilterComponent({ roomTypes, onFilterApplied }: FilterComponentProps  ) {
   const [selectedRoomType, setSelectedRoomType] = useState<string>("");
   const [checkInDate, setCheckInDate] = useState<Date | undefined>(undefined);
   const [checkOutDate, setCheckOutDate] = useState<Date | undefined>(undefined);
