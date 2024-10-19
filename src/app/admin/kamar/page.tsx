@@ -1,4 +1,5 @@
-"use client"
+//app/admin/kamar/page.tsx
+"use client";
 
 import { useState, useEffect, forwardRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -13,12 +14,23 @@ import {
   DialogTrigger,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import axios from "axios";
-import { Edit, Trash2, Plus, X, Search } from 'lucide-react';
+import { Edit, Trash2, Plus, X, Search } from "lucide-react";
 
 const DialogWithRef = forwardRef((props, ref) => (
   <Dialog {...props} ref={ref} />
@@ -64,7 +76,9 @@ export default function KamarManagement() {
 
   const fetchRooms = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/room`);
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_baseURL}/room`
+      );
       if (response.data.data) {
         setRooms(response.data.data);
       } else {
@@ -78,7 +92,9 @@ export default function KamarManagement() {
 
   const fetchRoomTypes = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/room-type`);
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_baseURL}/room-type`
+      );
       if (response.data.data) {
         setRoomTypes(response.data.data);
       } else {
@@ -94,14 +110,21 @@ export default function KamarManagement() {
     let filtered = rooms;
 
     if (searchTerm) {
-      filtered = filtered.filter(room =>
-        room.nomor_kamar.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        room.tipe_kamar.nama_tipe_kamar.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      filtered = filtered.filter((room) => {
+        const nomorKamar = typeof room.nomor_kamar === 'string' ? room.nomor_kamar : '';
+        const tipeKamar = room.tipe_kamar.nama_tipe_kamar || '';
+
+        return (
+          nomorKamar.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          tipeKamar.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      });
     }
 
-    if (typeFilter) {
-      filtered = filtered.filter(room => room.tipe_kamar.id_tipe_kamar.toString() === typeFilter);
+    if (typeFilter && typeFilter !== "all") {
+      filtered = filtered.filter(
+        (room) => room.tipe_kamar.id_tipe_kamar.toString() === typeFilter
+      );
     }
 
     setFilteredRooms(filtered);
@@ -110,11 +133,14 @@ export default function KamarManagement() {
   const handleCreateRoom = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_baseURL}/room`, {
-        nomor_kamar: newRoom.nomor_kamar,
-        id_tipe_kamar: newRoom.tipe_kamar?.id_tipe_kamar
-      });
-  
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_baseURL}/room`,
+        {
+          nomor_kamar: newRoom.nomor_kamar,
+          id_tipe_kamar: newRoom.tipe_kamar?.id_tipe_kamar,
+        }
+      );
+
       if (response.data.success) {
         toast.success(response.data.message || "Room created successfully");
         setNewRoom({});
@@ -133,10 +159,13 @@ export default function KamarManagement() {
     e.preventDefault();
     if (!editingRoom) return;
     try {
-      const response = await axios.put(`${process.env.NEXT_PUBLIC_baseURL}/room/${editingRoom.id_kamar}`, {
-        nomor_kamar: editingRoom.nomor_kamar,
-        id_tipe_kamar: editingRoom.tipe_kamar.id_tipe_kamar
-      });
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_baseURL}/room/${editingRoom.id_kamar}`,
+        {
+          nomor_kamar: editingRoom.nomor_kamar,
+          id_tipe_kamar: editingRoom.tipe_kamar.id_tipe_kamar,
+        }
+      );
       if (response.data.success) {
         toast.success(response.data.message || "Room updated successfully");
         setEditingRoom(null);
@@ -153,7 +182,9 @@ export default function KamarManagement() {
   const handleDeleteRoom = async (id: number) => {
     if (window.confirm("Are you sure you want to delete this room?")) {
       try {
-        const response = await axios.delete(`${process.env.NEXT_PUBLIC_baseURL}/room/${id}`);
+        const response = await axios.delete(
+          `${process.env.NEXT_PUBLIC_baseURL}/room/${id}`
+        );
         if (response.data.success) {
           toast.success("Room deleted successfully");
           fetchRooms();
@@ -170,11 +201,19 @@ export default function KamarManagement() {
   return (
     <div className="flex h-screen bg-gray-900 text-white">
       {/* Sidebar for creating new room */}
-      <div className={`fixed inset-y-0 left-0 w-64 bg-gray-800 shadow-lg transform ${isCreateRoomSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out z-20`}>
+      <div
+        className={`fixed inset-y-0 left-0 w-64 bg-gray-800 shadow-lg transform ${
+          isCreateRoomSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 ease-in-out z-20`}
+      >
         <div className="p-4">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Create New Room</h2>
-            <Button variant="ghost" size="icon" onClick={() => setIsCreateRoomSidebarOpen(false)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsCreateRoomSidebarOpen(false)}
+            >
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -183,21 +222,27 @@ export default function KamarManagement() {
               <Label htmlFor="nomor_kamar">Room Number</Label>
               <Input
                 id="nomor_kamar"
-                value={newRoom.nomor_kamar || ''}
-                onChange={(e) => setNewRoom({...newRoom, nomor_kamar: e.target.value})}
+                value={newRoom.nomor_kamar || ""}
+                onChange={(e) =>
+                  setNewRoom({ ...newRoom, nomor_kamar: e.target.value })
+                }
                 required
                 className="bg-gray-700 border-gray-600"
               />
             </div>
             <div>
               <Label htmlFor="tipe_kamar">Room Type</Label>
-              <Select 
+              <Select
                 onValueChange={(value) => {
-                  const selectedType = roomTypes.find(type => type.id_tipe_kamar.toString() === value);
+                  const selectedType = roomTypes.find(
+                    (type) => type.id_tipe_kamar.toString() === value
+                  );
                   setNewRoom({
-                    ...newRoom, 
-                    id_tipe_kamar: selectedType ? selectedType.id_tipe_kamar : undefined,
-                    tipe_kamar: selectedType
+                    ...newRoom,
+                    id_tipe_kamar: selectedType
+                      ? selectedType.id_tipe_kamar
+                      : undefined,
+                    tipe_kamar: selectedType,
                   });
                 }}
               >
@@ -205,28 +250,37 @@ export default function KamarManagement() {
                   <SelectValue placeholder="Select room type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {roomTypes.filter(type => type?.id_tipe_kamar).map((type) => (
-                    <SelectItem key={type.id_tipe_kamar} value={type.id_tipe_kamar?.toString() || ''}>
-                      {type.nama_tipe_kamar}
-                    </SelectItem>
-                  ))}
+                  {roomTypes
+                    .filter((type) => type?.id_tipe_kamar)
+                    .map((type) => (
+                      <SelectItem
+                        key={type.id_tipe_kamar}
+                        value={type.id_tipe_kamar.toString()}
+                      >
+                        {type.nama_tipe_kamar}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
-            <Button type="submit" className="w-full">Create Room</Button>
+            <Button type="submit" className="w-full">
+              Create Room
+            </Button>
           </form>
         </div>
       </div>
-  
+
       {/* Main content */}
       <div className="flex-1 p-4">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">Room Management</h1>
-          <Button onClick={() => setIsCreateRoomSidebarOpen(!isCreateRoomSidebarOpen)}>
+          <Button
+            onClick={() => setIsCreateRoomSidebarOpen(!isCreateRoomSidebarOpen)}
+          >
             <Plus className="mr-2 h-4 w-4" /> Add Room
           </Button>
         </div>
-  
+
         {/* Filter controls */}
         <div className="mb-4 flex space-x-4">
           <div className="flex-1">
@@ -245,28 +299,38 @@ export default function KamarManagement() {
           </div>
           <div>
             <Label htmlFor="type-filter">Filter by Type</Label>
-            <Select onValueChange={setTypeFilter}>
+            <Select onValueChange={(value) => setTypeFilter(value === "all" ? "" : value)}>
               <SelectTrigger id="type-filter" className="bg-gray-700 border-gray-600">
                 <SelectValue placeholder="All Types" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Types</SelectItem>
-                {roomTypes.filter(type => type?.id_tipe_kamar).map((type) => (
-                  <SelectItem key={type.id_tipe_kamar} value={type.id_tipe_kamar?.toString() || ''}>
-                    {type.nama_tipe_kamar}
-                  </SelectItem>
-                ))}
+                <SelectItem value="all">All Types</SelectItem>
+                {roomTypes
+                  .filter((type) => type?.id_tipe_kamar)
+                  .map((type) => (
+                    <SelectItem
+                      key={type.id_tipe_kamar}
+                      value={type.id_tipe_kamar.toString()}
+                    >
+                      {type.nama_tipe_kamar}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           </div>
         </div>
-  
+
         <ScrollArea className="h-[calc(100vh-200px)]">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredRooms.map((room) => (
-              <Card key={room.id_kamar} className="bg-gray-800 border-gray-700 w-full">
+              <Card
+                key={room.id_kamar}
+                className="bg-gray-800 border-gray-700 w-full"
+              >
                 <CardHeader className="p-3">
-                  <CardTitle className="text-lg text-gray-300">Room {room.nomor_kamar}</CardTitle>
+                  <CardTitle className="text-lg text-gray-300">
+                    Room {room.nomor_kamar}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="p-3">
                   {room.tipe_kamar && (
@@ -277,8 +341,12 @@ export default function KamarManagement() {
                         className="w-16 h-16 object-cover rounded"
                       />
                       <div>
-                        <p className="font-semibold text-sm text-white">{room.tipe_kamar.nama_tipe_kamar}</p>
-                        <p className="text-xs text-gray-400">Rp. {room.tipe_kamar.harga.toLocaleString()}</p>
+                        <p className="font-semibold text-sm text-white">
+                          {room.tipe_kamar.nama_tipe_kamar}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          Rp. {room.tipe_kamar.harga.toLocaleString()}
+                        </p>
                       </div>
                     </div>
                   )}
@@ -288,9 +356,9 @@ export default function KamarManagement() {
                         <TooltipTrigger asChild>
                           <DialogWithRef>
                             <DialogTrigger asChild>
-                              <Button 
-                                variant="outline" 
-                                size="icon" 
+                              <Button
+                                variant="outline"
+                                size="icon"
                                 className="h-8 w-8"
                                 onClick={() => setEditingRoom(room)}
                               >
@@ -304,44 +372,87 @@ export default function KamarManagement() {
                                   Update the room details below.
                                 </DialogDescription>
                               </DialogHeader>
-                              <form onSubmit={handleUpdateRoom} className="space-y-3">
+                              <form
+                                onSubmit={handleUpdateRoom}
+                                className="space-y-3"
+                              >
                                 <div>
-                                  <Label htmlFor="edit_nomor_kamar">Room Number</Label>
+                                  <Label htmlFor="edit_nomor_kamar">
+                                    Room Number
+                                  </Label>
                                   <Input
                                     id="edit_nomor_kamar"
-                                    value={editingRoom?.nomor_kamar || ''}
-                                    onChange={(e) => setEditingRoom(prev => prev ? {...prev, nomor_kamar: e.target.value} : null)}
+                                    value={editingRoom?.nomor_kamar || ""}
+                                    onChange={(e) =>
+                                      setEditingRoom((prev) =>
+                                        prev
+                                          ? {
+                                              ...prev,
+                                              nomor_kamar: e.target.value,
+                                            }
+                                          : null
+                                      )
+                                    }
                                     required
                                     className="bg-gray-700 border-gray-600"
                                   />
                                 </div>
                                 <div>
-                                  <Label htmlFor="edit_tipe_kamar">Room Type</Label>
-                                  <Select 
+                                  <Label htmlFor="edit_tipe_kamar">
+                                    Room Type
+                                  </Label>
+                                  <Select
                                     onValueChange={(value) => {
-                                      const selectedType = roomTypes.find(type => type.id_tipe_kamar.toString() === value);
-                                      setEditingRoom(prev => prev ? {
-                                        ...prev, 
-                                        tipe_kamar: selectedType ? {
-                                          ...selectedType
-                                        } : prev.tipe_kamar
-                                      } : null);
+                                      const  selectedType = roomTypes.find(
+                                        (type) =>
+                                          type.id_tipe_kamar.toString() ===
+                                          value
+                                      );
+                                      setEditingRoom((prev) =>
+                                        prev
+                                          ? {
+                                              ...prev,
+                                              tipe_kamar: selectedType
+                                                ? {
+                                                    ...selectedType,
+                                                  }
+                                                : prev.tipe_kamar,
+                                            }
+                                          : null
+                                      );
                                     }}
                                   >
                                     <SelectTrigger className="bg-gray-700 border-gray-600">
-                                      <SelectValue placeholder={editingRoom?.tipe_kamar?.nama_tipe_kamar || "Select room type"} />
+                                      <SelectValue
+                                        placeholder={
+                                          editingRoom?.tipe_kamar
+                                            ?.nama_tipe_kamar ||
+                                          "Select room type"
+                                        }
+                                      />
                                     </SelectTrigger>
                                     <SelectContent>
-                                      {roomTypes.filter(type => type?.id_tipe_kamar).map((type) => (
-                                        <SelectItem key={type.id_tipe_kamar} value={type.id_tipe_kamar?.toString() || ''}>
-                                          {type.nama_tipe_kamar}
-                                        </SelectItem>
-                                      ))}
+                                      {roomTypes
+                                        .filter((type) => type?.id_tipe_kamar)
+                                        .map((type) => (
+                                          <SelectItem
+                                            key={type.id_tipe_kamar}
+                                            value={type.id_tipe_kamar.toString()}
+                                          >
+                                            {type.nama_tipe_kamar}
+                                          </SelectItem>
+                                        ))}
                                     </SelectContent>
                                   </Select>
                                 </div>
                                 <div className="flex justify-end space-x-2">
-                                  <Button type="button" variant="outline" onClick={() => setEditingRoom(null)}>Cancel</Button>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setEditingRoom(null)}
+                                  >
+                                    Cancel
+                                  </Button>
                                   <Button type="submit">Update</Button>
                                 </div>
                               </form>
@@ -356,7 +467,12 @@ export default function KamarManagement() {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => handleDeleteRoom(room.id_kamar)}>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => handleDeleteRoom(room.id_kamar)}
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </TooltipTrigger>
@@ -374,4 +490,4 @@ export default function KamarManagement() {
       </div>
     </div>
   );
-}  
+}

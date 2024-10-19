@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 interface CustomJWTPayload extends JWTPayload {
-    role: "admin" | "resepsionis"|"pelanggan";
+    role: "admin" | "resepsionis" | "pelanggan";
   
 }
 type RolePaths = {
@@ -49,7 +49,7 @@ export async function middleware(request: NextRequest) {
     if (
       pathname.startsWith("/login") &&
       Boolean(
-        userRole === "admin" || userRole === "resepsionis"
+        userRole === "admin" || userRole === "resepsionis" || userRole === "pelanggan"
       )
     ) {
       console.log(
@@ -88,6 +88,9 @@ export const config = {
   matcher: [
     "/admin/:path*",
     "/resepsionis/:path*",
+    "/pelanggan/:path*",
     "/login",
+    "/login-as-guest",
+    "/"
   ],
 };

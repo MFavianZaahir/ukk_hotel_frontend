@@ -39,11 +39,13 @@ export default function LoginPage() {
 
         // Store JWT in cookies
         Cookies.set("token", token, {
-          expires: 7,
+          expires: 7, // Expires in 7 days
           secure: process.env.NODE_ENV === "production", // Use HTTPS in production
         }); // Expires in 7 days
         // Redirect after login
-        router.push("/");
+        if (res.data.data.role === "admin") {
+          window.location.href = `/${res.data.data.role}/user`;
+        } else window.location.href = `/${res.data.data.role}/dashboard`;
       } else {
         setError(res.data.message);
       }
