@@ -38,6 +38,8 @@ type Booking = {
   status_pemesanan: string
 }
 
+const statusOptions = ['baru', 'check_in', 'check_out']
+
 export default function ReceptionistBookingManagement() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([])
@@ -51,7 +53,7 @@ export default function ReceptionistBookingManagement() {
   const fetchBookings = async () => {
     const url = `${process.env.NEXT_PUBLIC_baseURL}/booking`;
     try {
-      const response = await  axios.get(url);
+      const response = await axios.get(url);
       if (response.data && response.data.data) {
         setBookings(response.data.data);
         setFilteredBookings(response.data.data);
@@ -79,14 +81,29 @@ export default function ReceptionistBookingManagement() {
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'confirmed':
+      case 'baru':
         return 'text-green-500'
-      case 'pending':
+      case 'check_in':
         return 'text-yellow-500'
-      case 'cancelled':
+      case 'check_out':
         return 'text-red-500'
       default:
         return 'text-gray-500'
+    }
+  }
+
+  const handleStatusChange = async (id_pemesanan: number, newStatus: string) => {
+    const url = `${process.env.NEXT_PUBLIC_baseURL}/booking/${id_pemesanan}`
+    try {
+      const response = await axios.put(url, { status_pemesanan: newStatus });
+      if (response.status === 200) {
+        toast.success('Status updated successfully');
+        fetchBookings();  // Refresh bookings after update
+      } else {
+        toast.error('Failed to update status');
+      }
+    } catch (error) {
+      toast.error('Failed to update status');
     }
   }
 
@@ -160,6 +177,7 @@ export default function ReceptionistBookingManagement() {
                   <TableHead className="text-gray-300">Room Type</TableHead>
                   <TableHead className="text-gray-300">Number of Rooms</TableHead>
                   <TableHead className="text-gray-300">Status</TableHead>
+                  <TableHead className="text-gray-300">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -174,6 +192,19 @@ export default function ReceptionistBookingManagement() {
                     <TableCell className="text-gray-300">{booking.jumlah_kamar}</TableCell>
                     <TableCell className={getStatusColor(booking.status_pemesanan)}>
                       {booking.status_pemesanan}
+                    </TableCell>
+                    <TableCell>
+                      <select
+                        className="bg-gray-700 text-white p-2 rounded"
+                        value={booking.status_pemesanan}
+                        onChange={(e) => handleStatusChange(booking.id_pemesanan, e.target.value)}
+                      >
+                        {statusOptions.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
                     </TableCell>
                   </TableRow>
                 ))}
