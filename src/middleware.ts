@@ -17,13 +17,13 @@ export async function middleware(request: NextRequest) {
   
   const token = request.cookies.get("token")?.value;
   console.log(token)
-  if (!token && !request.nextUrl.pathname.startsWith("/login")) {
+  if (!token && !request.nextUrl.pathname.startsWith("/auth/login")) {
     console.log("No token found, redirecting to login");
     console.log(request.nextUrl.pathname);
 
-    return NextResponse.redirect(new URL(`/login`, request.url));
+    return NextResponse.redirect(new URL(`/`, request.url));
   }
-  if (!token && request.nextUrl.pathname.startsWith("/login")) {
+  if (!token && request.nextUrl.pathname.startsWith("/auth/login")) {
     return NextResponse.next();
   }
   if (!token) throw new Error("Token is undefined or empty");
@@ -47,7 +47,7 @@ export async function middleware(request: NextRequest) {
       return rolePaths[role].some((path) => pathname.startsWith(path));
     };
     if (
-      pathname.startsWith("/login") &&
+      pathname.startsWith("/auth/login") &&
       Boolean(
         userRole === "admin" || userRole === "resepsionis" || userRole === "pelanggan"
       )
@@ -68,7 +68,7 @@ export async function middleware(request: NextRequest) {
         "Access denied, redirecting to your dashboard [" + userRole + "]"
       );
       return NextResponse.redirect(
-        new URL(`/${userRole}/dashboard`, request.url)
+        new URL(`/`, request.url)
       );
     }
 
@@ -76,7 +76,7 @@ export async function middleware(request: NextRequest) {
   } catch (error) {
     console.error("Token verification failed:", error);
     // Clear cookies and redirect to login on error
-    const response = NextResponse.redirect(new URL("/login", request.url));
+    const response = NextResponse.redirect(new URL("/auth/login", request.url));
     response.cookies.set("token", "", { maxAge: -1 });
     response.cookies.set("name", "", { maxAge: -1 });
     response.cookies.set("username", "", { maxAge: -1 });
@@ -89,8 +89,7 @@ export const config = {
     "/admin/:path*",
     "/resepsionis/:path*",
     "/pelanggan/:path*",
-    "/login",
-    "/login-as-guest",
-    "/"
+    "/auth/login",
+    "/auth/login-as-guest",
   ],
 };

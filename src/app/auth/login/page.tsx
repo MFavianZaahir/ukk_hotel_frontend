@@ -44,7 +44,7 @@ export default function LoginPage() {
         }); // Expires in 7 days
         // Redirect after login
         if (res.data.data.role === "admin") {
-          window.location.href = `/${res.data.data.role}/user`;
+          window.location.href = `/${res.data.data.role}/dashboard`;
         } else window.location.href = `/${res.data.data.role}/dashboard`;
       } else {
         setError(res.data.message);

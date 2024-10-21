@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Calendar, Clock, CreditCard, User } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import whotel from "@/public/w-hotels-1.png"
 import axios from "axios"
 import Cookies from "js-cookie"
 
@@ -59,7 +60,7 @@ export default function UserDashboard() {
     <div className="container mx-auto p-4 bg-gray-900 min-h-screen text-white">
       <div className="mb-8 text-center">
         <Image
-          src="/logo.png"
+          src={whotel}
           alt="Wikusama Hotel Logo"
           width={200}
           height={100}

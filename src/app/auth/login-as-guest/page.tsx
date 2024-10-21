@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Cookies from "js-cookie";
+import Link from "next/link"; // Import Link component
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -35,13 +36,13 @@ export default function LoginPage() {
       });
 
       if (res.data.success) {
-        const { token } = res.data; // Assuming the token is returned from the backend
+        const { token } = res.data;
 
         // Store JWT in cookies
         Cookies.set("token", token, {
           expires: 7, // Expires in 7 days
           secure: process.env.NODE_ENV === "production", // Use HTTPS in production
-        }); // Expires in 7 days
+        });
         // Redirect after login
         if (res.data.data.role === "admin") {
           window.location.href = `/${res.data.data.role}/customer`;
@@ -89,10 +90,17 @@ export default function LoginPage() {
               />
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex flex-col space-y-2">
             <Button type="submit" className="w-full">
               Login
             </Button>
+
+            {/* Add Button for Admin or Receptionist login */}
+            <Link href="/auth/login">
+              <Button variant="link" className="w-full text-blue-500">
+                An Admin or Receptionist? Login here
+              </Button>
+            </Link>
           </CardFooter>
         </form>
         {error && (
