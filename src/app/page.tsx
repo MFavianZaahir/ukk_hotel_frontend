@@ -10,8 +10,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { format } from "date-fns"
 import { mockReviews } from "./data/mockReview"
+import { ArrowRight } from "lucide-react"
 import { toast } from "sonner"
-// import placeholder from "@/public/placeholder.svg"
 import hotelz from "@/public/hotel.jpg"
 
 type RoomType = {
@@ -25,9 +25,11 @@ type RoomType = {
 export default function Home() {
   const [roomTypes, setRoomTypes] = useState<RoomType[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [userRole, setUserRole] = useState<string | null>(null)
 
   useEffect(() => {
     fetchRoomTypes()
+    getUserRole()
   }, [])
 
   const fetchRoomTypes = async () => {
@@ -47,12 +49,37 @@ export default function Home() {
     }
   }
 
+  const getUserRole = async () => {
+    try {
+      // const response = await axios.get(`${process.env.NEXT_PUBLIC_baseURL}/auth/role`, {
+      //   withCredentials: true,
+      // })
+      // setUserRole(response.data.role)
+    } catch (error) {
+      console.error("Error fetching user role:", error)
+    }
+  }
+
+  const getDashboardLink = () => {
+    switch (userRole) {
+      case "admin":
+        return "/admin/dashboard"
+      case "resepsionis":
+        return "/resepsionis/dashboard"
+      case "pelanggan":
+        return "/pelanggan/dashboard"
+      default:
+        return "/auth/login"
+    }
+  }
+
   return (
     <div className="container mx-auto p-4 bg-gray-900 text-white min-h-screen">
       <Hero />
       <Facilities />
       <Rooms roomTypes={roomTypes} isLoading={isLoading} />
       <Testimonies reviews={mockReviews} />
+      <DashboardSection userRole={userRole} getDashboardLink={getDashboardLink} />
     </div>
   )
 }
@@ -110,6 +137,36 @@ function Hero() {
           </motion.div>
         </div>
       </div>
+    </section>
+  )
+}
+
+function DashboardSection({ userRole, getDashboardLink }: { userRole: string | null, getDashboardLink: () => string }) {
+  return (
+    <section className="my-16">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card className="bg-gradient-to-r from-blue-600 to-purple-600 border-none shadow-lg">
+          <CardHeader>
+            <CardTitle className="text-3xl font-bold text-white text-center">Your Dashboard</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center">
+            <p className="text-lg text-gray-200 mb-6 text-center">
+              {userRole 
+                = `Welcome back! Access your ${userRole} dashboard to manage your hotel experience.`}
+            </p>
+            <Link href={getDashboardLink()}>
+              <Button className="bg-white text-blue-600 hover:bg-gray-100 transition-colors duration-300 font-semibold py-2 px-6 rounded-full flex items-center group">
+                {userRole = "Go to Your Dashboard"}
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </motion.div>
     </section>
   )
 }
@@ -175,7 +232,7 @@ function Rooms({ roomTypes, isLoading }: { roomTypes: RoomType[], isLoading: boo
                       className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Link href={`/pelanggan/dashboard?roomType=${room.id_tipe_kamar}`}>
+                      <Link href={`/pelanggan/dashboard`}>
                         <Button className="bg-blue-600 hover:bg-blue-700">Book Now</Button>
                       </Link>
                     </div>
@@ -230,3 +287,4 @@ function Testimonies({ reviews }: { reviews: typeof mockReviews }) {
     </section>
   )
 }
+

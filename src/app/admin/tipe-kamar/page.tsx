@@ -1,3 +1,4 @@
+//app/admin/tipe-kamar/page.tsx
 "use client"
 
 import { useState, useEffect } from "react";
@@ -267,7 +268,7 @@ export default function RoomTypeManagement() {
                                   />
                                 </div>
                                 <div className="flex justify-end space-x-2">
-                                  <Button type="button" variant="outline" onClick={() => setEditingRoomType(null)}>Cancel</Button>
+                                  <Button type="button" className="text-black" variant="outline" onClick={() => setEditingRoomType(null)}>Cancel</Button>
                                   <Button type="submit">Update</Button>
                                 </div>
                               </form>

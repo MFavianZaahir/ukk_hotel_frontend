@@ -10,7 +10,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         {/* <Link href="/admin" className="text-2xl font-bold">Hello Admin!</Link> */}
         <ul className="space-y-2">
           <li>
-            <Link href="/admin" className="flex items-center space-x-2 p-2 hover:bg-gray-700 rounded">
+            <Link href="/admin/dashboard" className="flex items-center space-x-2 p-2 hover:bg-gray-700 rounded">
               <LayoutDashboard size={20} />
               <span>Dashboard</span>
             </Link>
