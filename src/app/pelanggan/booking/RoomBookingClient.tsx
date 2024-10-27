@@ -307,7 +307,7 @@ export default function RoomBookingClient({ initialRoomTypes }: { initialRoomTyp
                 <p><strong>Check-out Date:</strong> {new Date(bookingConfirmation.tgl_check_out).toLocaleDateString()}</p>
                 <p><strong>Room Type:</strong> {bookingConfirmation.tipe_kamar}</p>
                 <p><strong>Number of Rooms:</strong> {bookingConfirmation.jumlah_kamar}</p>
-                <p><strong>Total Price:</strong> Rp. {bookingConfirmation.total_harga.toLocaleString()}</p>
+                <p className="text-white"><strong>Total Price:</strong> Rp. {bookingConfirmation.total_harga.toLocaleString()}</p>
                 <div className="flex justify-between mt-6">
                   <Button onClick={handlePrint} className="bg-green-600 hover:bg-green-700">
                     <Printer className="mr-2 h-4 w-4" /> Print Receipt

@@ -109,11 +109,11 @@ export default function ProfilePage() {
     <div className="container mx-auto p-4 bg-gray-900 text-white min-h-screen">
       <Card className="max-w-2xl mx-auto bg-gray-800 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">Edit Profile</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-white">Edit Profile</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
+            <div className="text-white">
               <Label htmlFor="nama_user">Name</Label>
               <Input
                 id="nama_user"
@@ -124,7 +124,7 @@ export default function ProfilePage() {
                 className="bg-gray-700 border-gray-600 text-white"
               />
             </div>
-            <div>
+            <div className="text-white">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
@@ -136,7 +136,7 @@ export default function ProfilePage() {
                 className="bg-gray-700 border-gray-600 text-white"
               />
             </div>
-            <div>
+            <div className="text-white">
               <Label htmlFor="foto">Profile Picture</Label>
               <Input
                 id="foto"
