@@ -40,7 +40,7 @@ export default function RegisterPage() {
     }
 
     try {
-      const res = await axios.post('http://localhost:8000/user/register', formData, {
+      const res = await axios.post('http://localhost:8000/customer/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       if (res.data.success) {
@@ -98,19 +98,6 @@ export default function RegisterPage() {
                 required
                 className="bg-gray-700 text-white border-gray-600 focus:border-blue-500"
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="role" className="text-gray-200">Role</Label>
-              <Select value={role} onValueChange={setRole}>
-                <SelectTrigger className="bg-gray-700 text-white border-gray-600 focus:border-blue-500">
-                  <SelectValue placeholder="Select a role" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-700 text-white border-gray-600">
-                  <SelectItem value="pelanggan">Pelanggan</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="kasir">Kasir</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="foto" className="text-gray-200">Profile Picture</Label>

@@ -58,7 +58,7 @@ export default function ReceptionistBookingManagement() {
   }, [])
 
   const fetchBookings = async () => {
-    const url = `${process.env.NEXT_PUBLIC_baseURL}/booking`;
+    const url = `${process.env.NEXT_PUBLIC_baseURL}/booking/resepsionis`;
     try {
       const response = await axios.get(url);
       if (response.data && response.data.data) {

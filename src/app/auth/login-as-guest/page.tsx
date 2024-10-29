@@ -101,6 +101,11 @@ export default function LoginPage() {
                 An Admin or Receptionist? Login here
               </Button>
             </Link>
+            <Link href="/auth/register">
+              <Button variant="link" className="w-full text-blue-500">
+                Don't Have an Account?
+              </Button>
+            </Link>
           </CardFooter>
         </form>
         {error && (

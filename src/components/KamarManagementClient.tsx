@@ -129,7 +129,7 @@ export default function KamarManagementClient() {
         `${process.env.NEXT_PUBLIC_baseURL}/room`,
         {
           nomor_kamar: newRoom.nomor_kamar,
-          id_tipe_kamar: newRoom.tipe_kamar?.id_tipe_kamar,
+          id_tipe_kamar: newRoom.id_tipe_kamar,
         }
       )
 
@@ -177,7 +177,7 @@ export default function KamarManagementClient() {
         const response = await axios.delete(
           `${process.env.NEXT_PUBLIC_baseURL}/room/${id}`
         )
-        if (response.data.success) {
+        if (response.data.success === 1) {
           toast.success("Room deleted successfully")
           fetchRooms()
         } else {
@@ -368,6 +368,7 @@ export default function KamarManagementClient() {
                                 </div>
                                 <div className="flex justify-end space-x-2">
                                   <Button
+                                    className="text-black"
                                     type="button"
                                     variant="outline"
                                     onClick={() => setEditingRoom(null)}
@@ -411,7 +412,6 @@ export default function KamarManagementClient() {
         </div>
       </ScrollArea>
 
-      {/* Sidebar for creating new room */}
       <div
         className={`fixed inset-y-0 right-0 w-64 bg-gray-800 shadow-lg transform ${
           isCreateRoomSidebarOpen ? "translate-x-0" : "translate-x-full"

@@ -86,7 +86,7 @@ export default function UserDashboard() {
             <Calendar className="h-4 w-4 text-blue-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{bookingSummary.total}</div>
+            <div className="text-2xl font-bold text-white">{bookingSummary.total}7</div>
           </CardContent>
         </Card>
         <Card className="bg-gray-800 border-gray-700">
@@ -95,7 +95,7 @@ export default function UserDashboard() {
             <Clock className="h-4 w-4 text-green-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{bookingSummary.upcoming}</div>
+            <div className="text-2xl font-bold text-white">{bookingSummary.upcoming}3</div>
           </CardContent>
         </Card>
         <Card className="bg-gray-800 border-gray-700">
